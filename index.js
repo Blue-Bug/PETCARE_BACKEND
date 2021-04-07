@@ -14,7 +14,8 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: push_config.databaseURL
 });
-
+app.set('pushAdmin',admin);
+console.log('admin 객체가 app 객체의 속성으로 추가됨.');
 
 let dateObj = date.getnewdate();
 console.log(dateObj.year+'-'+dateObj.month+'-'+dateObj.date+' '+dateObj.weekday);

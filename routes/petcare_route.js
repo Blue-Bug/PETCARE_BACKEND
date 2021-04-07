@@ -3,8 +3,9 @@ const auto_cal = require('../auto_cal');
 
 const sendCommand = (req,res)=>{
   const connection = req.app.get('database');
-
+  const admin = req.app.get('pushAdmin');
   console.log(req.body);
+  
   if(req.body.id == "undefined"){
       console.log('NO ID HERE');
       res.send("ID Value Missing");
@@ -501,6 +502,7 @@ const registerAPP = (req,res)=>{
 
 const testRoute = (req,res)=>{
     const connection = req.app.get('database');
+    const admin = req.app.get('pushAdmin');
     if(req.query.path == 0){
         res.send('푸시알람 테스트');
         let sql = 'SELECT * FROM USER WHERE arduino_id = \'TEST1234\'';
