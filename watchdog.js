@@ -1,7 +1,7 @@
 const schedule = require('node-schedule');
 const commands = require('./commands');
-var date = require('./date');
-var auto_cal = require('./auto_cal');
+const date = require('./date');
+const auto_cal = require('./auto_cal');
 
 
 //21.1.4 updateContainer랑 sendPushAlarm 변경해줘야됨
@@ -17,10 +17,10 @@ exports._1mScheduler = (connection, admin) => {
         //is_always가 1일 때는 지우지 않는다
 
         console.log('1분 스케줄러 시작');
-        var dateObj = date.getnewdate();
-        var sql = 'SELECT * FROM FEED WHERE feed_weekday = ? and feed_time = ?';
-        var feed_time = dateObj.hours + ':' + dateObj.minutes + ':' + dateObj.seconds;
-        var params = [dateObj.weekday, feed_time]//현재 요일,시간;
+        let dateObj = date.getnewdate();
+        let sql = 'SELECT * FROM FEED WHERE feed_weekday = ? and feed_time = ?';
+        let feed_time = dateObj.hours + ':' + dateObj.minutes + ':' + dateObj.seconds;
+        let params = [dateObj.weekday, feed_time]//현재 요일,시간;
 
         connection.query(sql, params, function (err, rows, fields) {
             if (!err) {
@@ -30,13 +30,13 @@ exports._1mScheduler = (connection, admin) => {
                     sql = 'SELECT * FROM USER WHERE arduino_id = ?';
                     for (i = 0; i < rows.length; i++) {
                         params = [rows[i].arduino_id];
-                        var feed_con = [rows[i].feed_c1, rows[i].feed_c2, rows[i].feed_c3];
+                        let feed_con = [rows[i].feed_c1, rows[i].feed_c2, rows[i].feed_c3];
                         console.log(feed_con);
-                        var is_auto = rows[i].is_auto;
+                        let is_auto = rows[i].is_auto;
                         connection.query(sql, params, function (err, rows, fields) {
                             if (!err) {
-                                var hosturl = rows[0].ext_ip;
-                                var pathurl = '/MOTOR?';
+                                let hosturl = rows[0].ext_ip;
+                                let pathurl = '/MOTOR?';
                                 //hosturl과 pathurl 설정
 
                                 if (rows.length == 0) {
@@ -45,9 +45,9 @@ exports._1mScheduler = (connection, admin) => {
                                 }
                                 else {
                                     if (is_auto == 1) {
-                                        var cat_dog = rows[0].cat_dog;
-                                        var app_token = rows[0].app_token;
-                                        var params = [rows[0].arduino_id];
+                                        let cat_dog = rows[0].cat_dog;
+                                        let app_token = rows[0].app_token;
+                                        let params = [rows[0].arduino_id];
                                         auto_cal.get_result(connection,admin, cat_dog, app_token, params, hosturl, pathurl);
                                     }
                                     else {
@@ -63,8 +63,8 @@ exports._1mScheduler = (connection, admin) => {
 
                                     }
                                     //푸시 알람 보냄
-                                    var title = "배식 알림"
-                                    var body = feed_time + " 배식이 완료되었습니다."
+                                    let title = "배식 알림"
+                                    let body = feed_time + " 배식이 완료되었습니다."
                                     commands.sendPushAlarm(admin,rows[0].app_token, title, body);
 
                                 }
@@ -97,7 +97,7 @@ exports._1mScheduler = (connection, admin) => {
 }
 
 exports._30sScheduler = (connection) => {
-    var sql = 'SHOW TABLES';
+    let sql = 'SHOW TABLES';
     connection.query(sql, function (err, rows, fields) {
         if (!err) {
             console.log('DB Connection Alive');
@@ -112,10 +112,10 @@ exports._dawnScheduler = (connection) => {
     schedule.scheduleJob('0 0 4 * * *', function () {
         //새벽 4시에 실행되는 스케줄러
         //DB의 WEIGHT 테이블에서 7일 이상된 기록 삭제
-        var dateObj = date.getnewdate();
-        var weight_date = dateObj.year + '-' + dateObj.month + '-' + dateObj.date;
-        var sql = 'DELETE * FROM WEIGHT WHERE weight_date <= ?';
-        var params = [weight_date - 7];
+        let dateObj = date.getnewdate();
+        let weight_date = dateObj.year + '-' + dateObj.month + '-' + dateObj.date;
+        let sql = 'DELETE * FROM WEIGHT WHERE weight_date <= ?';
+        let params = [weight_date - 7];
         connection.query(sql, params, function (err, rows, fields) {
             if (!err) {
                 console.log('DB에서 7일 이상된 무게 기록을 삭제했습니다.');
