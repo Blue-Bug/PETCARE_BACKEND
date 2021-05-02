@@ -30,8 +30,8 @@ const sendCommand = (req,res)=>{
                                   req.body.c1,
                                   req.body.c2,
                                   req.body.c3,
-                                  req.body.auto,
-                                  req.body.always];
+                                  req.body.is_auto,
+                                  req.body.is_always];
                       connection.query(sql,params,function(err,rows,fields){
                           if(!err){
                               console.log('DB Query Successfully Executed : ',sql);
@@ -56,8 +56,8 @@ const sendCommand = (req,res)=>{
               }
           });
       }
-      //COMMAND CASE 2 = 즉시 배식
-      //즉시 배식하기
+      //COMMAND CASE 2 = 바로 배식
+      //바로 배식하기
           //배식하기 전 테이블에 있는지 검사해서 있으면 진짜로 배식할건지 물어보기?
           //아두이노로 HTTP GET으로 명령 전송
       else if(req.body.command == 2){
