@@ -210,7 +210,6 @@ const getContainer = (req,res)=>{
           }
       });
   }
-  
 }
 
 const sendLeftover = (req,res)=>{
@@ -223,6 +222,8 @@ const sendLeftover = (req,res)=>{
   let sql = 'SELECT * from WEIGHT WHERE arduino_id = ? and weight_date = ?'
   let params = [req.query.id,weight_date];
   let leftover = req.query.leftover;
+  //아두이노 무게센서에서 측정한 값에 
+  //부호가 반전되어 전달되는 경우 체크
   if(leftover < 0){
       leftover = -leftover;
   }
@@ -279,15 +280,6 @@ const sendLeftover = (req,res)=>{
           res.send("DB Query Error Occured");
       }
   });
-
-  
- let container_empty = req.query.empty;
- if(container_empty!="undefined"){
-  //사료 거의 다 떨어져가면 알려주기
-  //무게 정보를 보낼때 그 정보가 사료의 양에 대한 정보라면
-  //그 값이 30g 이하라면 푸시 알림으로 보내면 될것같다.  
-  //사료는 한번 배급할때마다 15g씩 빠진다고 가정, 매 배급시 무게를 보내도록 한다.
- }
 };
 
 const sendWeight = (req,res)=>{

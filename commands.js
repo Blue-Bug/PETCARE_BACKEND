@@ -35,7 +35,7 @@ const updateContainer = (connection,arduino_id,c1,c2,c3) => {
     let params = [arduino_id,weight_date];
     connection.query(sql,params,function(err,rows,fields){
         if(!err){
-            if(rows.length == 0){//첫 급식일 경우
+            if(rows.length == 0){//첫 배식일 경우
                 sql = 'INSERT into WEIGHT(arduino_id,weight_date,consume_c1,consume_c2,consume_c3) values(?,?,?,?,?)';
                 params = [arduino_id,weight_date,c1,c2,c3];
                 connection.query(sql,params,function(err,rows,fields){
@@ -47,7 +47,7 @@ const updateContainer = (connection,arduino_id,c1,c2,c3) => {
                     }
                 });
             }
-            else{//이미 급식이 있을 경우
+            else{//이미 배식이 있을 경우
                 sql = 'UPDATE WEIGHT SET consume_c1 = consume_c1 + ?, consume_c2 = consume_c2 + ?, consume_c3 = consume_c3 + ? WHERE arduino_id = ? and weight_date = ?';
                 params = [c1,c2,c3,arduino_id,weight_date];
                 connection.query(sql,params,function(err,rows,fields){
@@ -63,7 +63,14 @@ const updateContainer = (connection,arduino_id,c1,c2,c3) => {
         else{
             console.log('Error while performing Query',err);
         }
-    });        
+    });
+    let container_empty = false;
+    if(container_empty){
+      //사료 거의 다 떨어져가면 알려주기
+      //남은 사료량에서 섭취한 사료량을 빼서 갱신하고
+      //만약 남은 사료량이 일정 수준 이하로 내려가면 
+      //사료 채우기 푸시 알림을 보낸다.
+     }        
 };
 
 const sendPushAlarm = (admin,registrationToken,title,body) => {
